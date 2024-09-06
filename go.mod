@@ -1,5 +1,5 @@
 module browser-connector-client
 
-go 1.23.0
+go 1.22
 
-require github.com/google/uuid v1.6.0 // indirect
+require github.com/google/uuid v1.6.0
