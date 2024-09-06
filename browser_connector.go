@@ -1,4 +1,4 @@
-package connector
+package browser_connector_client
 
 import (
 	"bytes"
