@@ -50,6 +50,7 @@ type Session interface {
 	GetPageContent() (string, error)
 	Goto(url string) error
 	ImplicitWait(seconds int32) error
+	DeleteSession() error
 }
 
 func (c BrowserSession) Goto(url string) error {
@@ -86,11 +87,19 @@ func (c BrowserSession) GetPageContent() (string, error) {
 }
 
 func (c BrowserSession) ImplicitWait(seconds int32) error {
-
 	marshal, _ := json.Marshal(map[string]any{
 		"seconds": seconds,
 	})
 	response, err := http.Post(c.url+"Session/"+c.id.String()+"/ImplicitWait", "application/json", bytes.NewBuffer(marshal))
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+	return nil
+}
+
+func (c BrowserSession) DeleteSession() error {
+	response, err := http.NewRequest("DELETE", c.url+"Session/"+c.id.String(), nil)
 	if err != nil {
 		return err
 	}
