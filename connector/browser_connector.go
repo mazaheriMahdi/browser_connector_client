@@ -99,10 +99,10 @@ func (c BrowserSession) ImplicitWait(seconds int32) error {
 }
 
 func (c BrowserSession) DeleteSession() error {
-	response, err := http.NewRequest("DELETE", c.url+"Session/"+c.id.String(), nil)
+	_, err := http.NewRequest("DELETE", c.url+"Session/"+c.id.String(), nil)
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+
 	return nil
 }
