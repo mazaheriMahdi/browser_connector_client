@@ -19,6 +19,7 @@ type Session interface {
 	ImplicitWait(seconds int32) error
 	DeleteSession() error
 	Scroll(x int64, y int64) error
+	Screenshot() ([]byte, error)
 }
 
 func (c BrowserSession) Goto(url string) error {
