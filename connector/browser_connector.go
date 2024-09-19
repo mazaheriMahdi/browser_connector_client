@@ -19,7 +19,7 @@ type BrowserConnector interface {
 func (c Connector) CreateSession() (Session, error) {
 
 	marshal, _ := json.Marshal(map[string]string{})
-	response, err := http.Post(c.url+"Session", "application/json", bytes.NewBuffer(marshal))
+	response, err := http.Post(c.url+"/Session", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return BrowserSession{}, err
 	}
