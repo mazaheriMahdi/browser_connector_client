@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/google/uuid"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -19,6 +19,7 @@ type Session interface {
 	ImplicitWait(seconds int32) error
 	DeleteSession() error
 	Scroll(x int64, y int64) error
+	Clean() error
 	Screenshot() ([]byte, error)
 }
 
@@ -94,12 +95,22 @@ func (c BrowserSession) Scroll(x int64, y int64) error {
 	return nil
 }
 
+func (c BrowserSession) Clean() error {
+	marshal, _ := json.Marshal(map[string]any{})
+	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Clean", "application/json", bytes.NewBuffer(marshal))
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+	return nil
+}
+
 func (c BrowserSession) Screenshot() ([]byte, error) {
 	response, err := http.Get(c.Url + "/Session/" + c.Id.String() + "/Screenshot")
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
-	imageBytes, err := ioutil.ReadAll(response.Body)
+	imageBytes, err := io.ReadAll(response.Body)
 	return imageBytes, err
 }
