@@ -21,7 +21,7 @@ type Session interface {
 	Scroll(x int64, y int64) error
 	Clean() error
 	Screenshot() ([]byte, error)
-	Click(selector string) ([]byte, error)
+	Click(selector string) error
 }
 
 func (c BrowserSession) Goto(url string) error {
@@ -116,15 +116,14 @@ func (c BrowserSession) Screenshot() ([]byte, error) {
 	return imageBytes, err
 }
 
-func (c BrowserSession) Click(selector string) ([]byte, error) {
+func (c BrowserSession) Click(selector string) error {
 	marshal, _ := json.Marshal(map[string]any{
 		"selector": selector,
 	})
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Click", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer response.Body.Close()
-	imageBytes, err := io.ReadAll(response.Body)
-	return imageBytes, err
+	return err
 }
