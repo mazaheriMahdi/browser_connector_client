@@ -22,6 +22,7 @@ type Session interface {
 	Clean() error
 	Screenshot() ([]byte, error)
 	Click(selector string) error
+	Wait(selector string) error
 }
 
 func (c BrowserSession) Goto(url string) error {
@@ -121,6 +122,18 @@ func (c BrowserSession) Click(selector string) error {
 		"selector": selector,
 	})
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Click", "application/json", bytes.NewBuffer(marshal))
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+	return err
+}
+
+func (c BrowserSession) Wait(selector string) error {
+	marshal, _ := json.Marshal(map[string]any{
+		"selector": selector,
+	})
+	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Wait", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return err
 	}
