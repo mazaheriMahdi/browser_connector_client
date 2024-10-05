@@ -15,7 +15,7 @@ type BrowserSession struct {
 
 type Session interface {
 	GetPageContent() (string, error)
-	Goto(url string) error
+	Goto(url string, pageHeight int64, pageWeight int64) error
 	ImplicitWait(seconds int32) error
 	DeleteSession() error
 	Scroll(x int64, y int64) error
