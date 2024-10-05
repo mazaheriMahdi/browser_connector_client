@@ -25,10 +25,14 @@ type Session interface {
 	Wait(selector string) error
 }
 
-func (c BrowserSession) Goto(url string) error {
-	marshal, _ := json.Marshal(map[string]any{
-		"Url": url,
-	})
+func (c BrowserSession) Goto(url string, pageHeight int64, pageWeight int64) error {
+	marshal, _ := json.Marshal(
+		map[string]any{
+			"url":        url,
+			"pageHeight": pageHeight,
+			"pageWeight": pageWeight,
+		},
+	)
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Goto", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return err
@@ -59,10 +63,14 @@ func (c BrowserSession) GetPageContent() (string, error) {
 }
 
 func (c BrowserSession) ImplicitWait(seconds int32) error {
-	marshal, _ := json.Marshal(map[string]any{
-		"seconds": seconds,
-	})
-	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/ImplicitWait", "application/json", bytes.NewBuffer(marshal))
+	marshal, _ := json.Marshal(
+		map[string]any{
+			"seconds": seconds,
+		},
+	)
+	response, err := http.Post(
+		c.Url+"/Session/"+c.Id.String()+"/ImplicitWait", "application/json", bytes.NewBuffer(marshal),
+	)
 	if err != nil {
 		return err
 	}
@@ -85,10 +93,12 @@ func (c BrowserSession) DeleteSession() error {
 }
 
 func (c BrowserSession) Scroll(x int64, y int64) error {
-	marshal, _ := json.Marshal(map[string]any{
-		"x": x,
-		"y": y,
-	})
+	marshal, _ := json.Marshal(
+		map[string]any{
+			"x": x,
+			"y": y,
+		},
+	)
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Scroll", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return err
@@ -118,9 +128,11 @@ func (c BrowserSession) Screenshot() ([]byte, error) {
 }
 
 func (c BrowserSession) Click(selector string) error {
-	marshal, _ := json.Marshal(map[string]any{
-		"selector": selector,
-	})
+	marshal, _ := json.Marshal(
+		map[string]any{
+			"selector": selector,
+		},
+	)
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Click", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return err
@@ -130,9 +142,11 @@ func (c BrowserSession) Click(selector string) error {
 }
 
 func (c BrowserSession) Wait(selector string) error {
-	marshal, _ := json.Marshal(map[string]any{
-		"selector": selector,
-	})
+	marshal, _ := json.Marshal(
+		map[string]any{
+			"selector": selector,
+		},
+	)
 	response, err := http.Post(c.Url+"/Session/"+c.Id.String()+"/Wait", "application/json", bytes.NewBuffer(marshal))
 	if err != nil {
 		return err
